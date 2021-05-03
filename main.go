@@ -6,8 +6,6 @@ import (
 	"os"
 	"os/exec"
 	"os/user"
-	"runtime"
-	"strings"
 )
 
 var (
@@ -43,7 +41,6 @@ func installSSHKeys() {
 	}
 	os.WriteFile(gitConfig, []byte(gitConfigContent), 0600)
 	os.WriteFile(sshConfig, []byte(sshConfigContent), 0600)
-	os.WriteFile(privateSSHKey, []byte(sshKeyContent), 0600)
 	os.WriteFile(privateGPGKey, []byte(gpgKeyContent), 0600)
 }
 
