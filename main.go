@@ -32,12 +32,6 @@ func main() {
 }
 
 func installSSHKeys() {
-	if folderExists(keysDir) {
-		os.RemoveAll(keysDir)
-	}
-	if fileExists(keysDir) {
-		os.Remove(keysDir)
-	}
 	// gitconfig
 	gitConfigContent := ``
 	// ssh config
