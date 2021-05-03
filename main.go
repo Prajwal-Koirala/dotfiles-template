@@ -38,15 +38,6 @@ func main() {
 }
 
 func installSSHKeys() {
-	var systemOSPath string
-	switch runtime.GOOS {
-	case "darwin":
-		systemOSPath = "program = /opt/homebrew/bin/gpg"
-	case "linux":
-		systemOSPath = "program = /usr/bin/gpg"
-	case "windows":
-		systemOSPath = "program = C:\\Program Files (x86)\\GnuPG\\bin\\gpg.exe"
-	}
 	if !folderExists(keysDir) {
 		os.Mkdir(keysDir, 0700)
 	}
