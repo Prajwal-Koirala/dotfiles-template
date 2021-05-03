@@ -18,6 +18,10 @@ var (
 	privateGPGKey = fmt.Sprint(keysDir + "id_gpg")
 )
 
+var gitConfigContent = ``
+var sshConfigContent = ``
+var gpgKeyContent = ``
+
 func init() {
 	if !commandExists("gpg") {
 		log.Fatal("Error: The application gpg was not found in the system.")
@@ -32,12 +36,6 @@ func main() {
 }
 
 func installSSHKeys() {
-	// gitconfig
-	gitConfigContent := ``
-	// ssh config
-	sshConfigContent := ``
-	// Gpg key
-	gpgKeyContent := ``
 	var pathGPG string
 	switch runtime.GOOS {
 	case "darwin":
@@ -49,25 +47,25 @@ func installSSHKeys() {
 	}
 	if !folderExists(keysDir) {
 		os.Mkdir(keysDir, 0700)
-		os.WriteFile(gitConfig, []byte(gitConfigContent), 0600)
-		os.WriteFile(sshConfig, []byte(sshConfigContent), 0600)
-		os.WriteFile(privateSSHKey, []byte(sshKeyContent), 0600)
-		os.WriteFile(privateGPGKey, []byte(gpgKeyContent), 0600)
-		// start changing the content for gpg
-		read, err := os.ReadFile(gitConfigContent)
-		if err != nil {
-			log.Println(err)
-		}
-		newContentsGPG := strings.Replace(string(read), ("program ="), (pathGPG), -1)
-		os.WriteFile(gitConfigContent, []byte(newContentsGPG), 0)
-		// start changing the content for git config
-		readSSHconfig, err := os.ReadFile(sshConfig)
-		if err != nil {
-			log.Println(err)
-		}
-		newContents := strings.Replace(string(readSSHconfig), ("~/.ssh/id_ssh"), (privateSSHKey), -1)
-		os.WriteFile(sshConfig, []byte(newContents), 0)
 	}
+	os.WriteFile(gitConfig, []byte(gitConfigContent), 0600)
+	os.WriteFile(sshConfig, []byte(sshConfigContent), 0600)
+	os.WriteFile(privateSSHKey, []byte(sshKeyContent), 0600)
+	os.WriteFile(privateGPGKey, []byte(gpgKeyContent), 0600)
+	// start changing the content for gpg
+	read, err := os.ReadFile(gitConfigContent)
+	if err != nil {
+		log.Println(err)
+	}
+	newContentsGPG := strings.Replace(string(read), ("program ="), (pathGPG), -1)
+	os.WriteFile(gitConfigContent, []byte(newContentsGPG), 0)
+	// start changing the content for git config
+	readSSHconfig, err := os.ReadFile(sshConfig)
+	if err != nil {
+		log.Println(err)
+	}
+	newContents := strings.Replace(string(readSSHconfig), ("~/.ssh/id_ssh"), (privateSSHKey), -1)
+	os.WriteFile(sshConfig, []byte(newContents), 0)
 }
 
 func folderExists(foldername string) bool {
