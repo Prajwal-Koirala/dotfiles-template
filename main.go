@@ -18,9 +18,11 @@ var (
 	privateGPGKey = fmt.Sprint(keysDir + "id_gpg")
 )
 
-var gitConfigContent = ``
-var sshConfigContent = ``
-var gpgKeyContent = ``
+var (
+	gitConfigContent = ``
+	sshConfigContent = ``
+	gpgKeyContent    = ``
+)
 
 func init() {
 	if !commandExists("gpg") {
