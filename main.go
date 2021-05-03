@@ -38,14 +38,14 @@ func main() {
 }
 
 func installSSHKeys() {
-	var pathGPG string
+	var systemOSPath string
 	switch runtime.GOOS {
 	case "darwin":
-		pathGPG = "program = /opt/homebrew/bin/gpg"
+		systemOSPath = "program = /opt/homebrew/bin/gpg"
 	case "linux":
-		pathGPG = "program = /usr/bin/gpg"
+		systemOSPath = "program = /usr/bin/gpg"
 	case "windows":
-		pathGPG = "program = C:\\Program Files (x86)\\GnuPG\\bin\\gpg.exe"
+		systemOSPath = "program = C:\\Program Files (x86)\\GnuPG\\bin\\gpg.exe"
 	}
 	if !folderExists(keysDir) {
 		os.Mkdir(keysDir, 0700)
@@ -54,20 +54,6 @@ func installSSHKeys() {
 	os.WriteFile(sshConfig, []byte(sshConfigContent), 0600)
 	os.WriteFile(privateSSHKey, []byte(sshKeyContent), 0600)
 	os.WriteFile(privateGPGKey, []byte(gpgKeyContent), 0600)
-	// start changing the content for gpg
-	read, err := os.ReadFile(gitConfigContent)
-	if err != nil {
-		log.Println(err)
-	}
-	newContentsGPG := strings.Replace(string(read), ("program ="), (pathGPG), -1)
-	os.WriteFile(gitConfigContent, []byte(newContentsGPG), 0)
-	// start changing the content for git config
-	readSSHconfig, err := os.ReadFile(sshConfig)
-	if err != nil {
-		log.Println(err)
-	}
-	newContents := strings.Replace(string(readSSHconfig), ("~/.ssh/id_ssh"), (privateSSHKey), -1)
-	os.WriteFile(sshConfig, []byte(newContents), 0)
 }
 
 func folderExists(foldername string) bool {
