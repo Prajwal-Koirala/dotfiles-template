@@ -14,7 +14,7 @@ var (
 	sshConfig     = fmt.Sprint(keysDir + "config")
 	privateSSHKey = fmt.Sprint(keysDir + "id_ssh")
 	privateGPGKey = fmt.Sprint(keysDir + "id_gpg")
-	err error
+	err           error
 )
 
 var (
@@ -41,12 +41,18 @@ func installSSHKeys() {
 		err = os.Mkdir(keysDir, 0700)
 		handleErrors(err)
 	}
-	err = os.WriteFile(gitConfig, []byte(gitConfigContent), 0600)
-	handleErrors(err)
-	err = os.WriteFile(sshConfig, []byte(sshConfigContent), 0600)
-	handleErrors(err)
-	err = os.WriteFile(privateGPGKey, []byte(gpgKeyContent), 0600)
-	handleErrors(err)
+	if len(gitConfigContent) > 1 {
+		err = os.WriteFile(gitConfig, []byte(gitConfigContent), 0600)
+		handleErrors(err)
+	}
+	if len(sshConfigContent) > 1 {
+		err = os.WriteFile(sshConfig, []byte(sshConfigContent), 0600)
+		handleErrors(err)
+	}
+	if len(privateGPGKey) > 1 {
+		err = os.WriteFile(privateGPGKey, []byte(gpgKeyContent), 0600)
+		handleErrors(err)
+	}
 }
 
 func folderExists(foldername string) bool {
