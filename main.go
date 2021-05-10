@@ -49,7 +49,7 @@ func installSSHKeys() {
 		err = os.WriteFile(sshConfig, []byte(sshConfigContent), 0600)
 		handleErrors(err)
 	}
-	if len(privateGPGKey) > 1 {
+	if len(gpgKeyContent) > 1 {
 		err = os.WriteFile(privateGPGKey, []byte(gpgKeyContent), 0600)
 		handleErrors(err)
 	}
