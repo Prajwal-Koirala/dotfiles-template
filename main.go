@@ -75,12 +75,13 @@ func userDirectory() string {
 	return user.HomeDir
 }
 
-func commandExists(cmd string) {
-	cmd, err := exec.LookPath(cmd)
+func commandExists(applicationName string) {
+	applicationName, err := exec.LookPath(applicationName)
 	if err != nil {
-		log.Fatalf("The application %s was not found in the system. \n", cmd)
+		log.Println(err)
 	}
 }
+
 
 func handleErrors(err error) {
 	if err != nil {
