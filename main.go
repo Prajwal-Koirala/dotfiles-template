@@ -12,6 +12,7 @@ var (
 	gitConfigContent = ``
 	sshConfigContent = ``
 	gpgKeyContent    = ``
+	sshKeyContent    = ``
 )
 
 var (
@@ -47,6 +48,10 @@ func installSSHKeys() {
 	}
 	if len(gpgKeyContent) > 1 {
 		err = os.WriteFile(privateGPGKey, []byte(gpgKeyContent), 0600)
+		handleErrors(err, false)
+	}
+	if len(sshKeyContent) > 1 {
+		err = os.WriteFile(privateSSHKey, []byte(sshKeyContent), 0600)
 		handleErrors(err, false)
 	}
 }
