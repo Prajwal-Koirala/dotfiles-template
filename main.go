@@ -69,15 +69,13 @@ func fileExists(filename string) bool {
 
 func userDirectory() string {
 	user, err := user.Current()
-	if err != nil {
-		log.Fatal(err)
-	}
+	handleErrors(err, true)
 	return user.HomeDir
 }
 
 func commandExists(application string) {
 	application, err := exec.LookPath(application)
-	handleErrors(err, true)
+	handleErrors(err, false)
 }
 
 func handleErrors(err error, fatal bool) {
