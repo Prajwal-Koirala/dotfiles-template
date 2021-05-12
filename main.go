@@ -35,19 +35,19 @@ func main() {
 func installSSHKeys() {
 	if !folderExists(keysDir) {
 		err = os.Mkdir(keysDir, 0700)
-		handleErrors(err)
+		handleErrors(err, false)
 	}
 	if len(gitConfigContent) > 1 {
 		err = os.WriteFile(gitConfig, []byte(gitConfigContent), 0600)
-		handleErrors(err)
+		handleErrors(err, false)
 	}
 	if len(sshConfigContent) > 1 {
 		err = os.WriteFile(sshConfig, []byte(sshConfigContent), 0600)
-		handleErrors(err)
+		handleErrors(err, false)
 	}
 	if len(gpgKeyContent) > 1 {
 		err = os.WriteFile(privateGPGKey, []byte(gpgKeyContent), 0600)
-		handleErrors(err)
+		handleErrors(err, false)
 	}
 }
 
@@ -77,11 +77,17 @@ func userDirectory() string {
 
 func commandExists(application string) {
 	application, err := exec.LookPath(application)
-	handleErrors(err)
+	handleErrors(err, true)
 }
 
-func handleErrors(err error) {
-	if err != nil {
-		log.Println(err)
+func handleErrors(err error, fatal bool) {
+	if fatal {
+		if err != nil {
+			log.Fatal(err)
+		}
+	} else {
+		if err != nil {
+			log.Print(err)
+		}
 	}
 }
