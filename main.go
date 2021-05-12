@@ -24,12 +24,8 @@ var (
 )
 
 func init() {
-	if !commandExists("gpg") {
-		log.Fatal("Error: The application gpg was not found in the system.")
-	}
-	if !commandExists("git") {
-		log.Fatal("Error: The application git was not found in the system.")
-	}
+	commandExists("git")
+	commandExists("gpg")
 }
 
 func main() {
@@ -79,13 +75,11 @@ func userDirectory() string {
 	return user.HomeDir
 }
 
-func commandExists(cmd string) bool {
+func commandExists(cmd string) {
 	cmd, err := exec.LookPath(cmd)
 	if err != nil {
-		return false
+		log.Fatalf("The application %s was not found in the system. \n", cmd)
 	}
-	_ = cmd
-	return true
 }
 
 func handleErrors(err error) {
