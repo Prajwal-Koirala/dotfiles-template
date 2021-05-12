@@ -9,18 +9,18 @@ import (
 )
 
 var (
+	gitConfigContent = ``
+	sshConfigContent = ``
+	gpgKeyContent    = ``
+)
+
+var (
 	gitConfig     = fmt.Sprint(userDirectory() + "/.gitconfig")
 	keysDir       = fmt.Sprint(userDirectory() + "/.ssh/")
 	sshConfig     = fmt.Sprint(keysDir + "config")
 	privateSSHKey = fmt.Sprint(keysDir + "id_ssh")
 	privateGPGKey = fmt.Sprint(keysDir + "id_gpg")
 	err           error
-)
-
-var (
-	gitConfigContent = ``
-	sshConfigContent = ``
-	gpgKeyContent    = ``
 )
 
 func init() {
