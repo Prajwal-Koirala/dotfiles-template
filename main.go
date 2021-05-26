@@ -38,19 +38,19 @@ func installSSHKeys() {
 		err = os.Mkdir(keysDir, 0700)
 		handleErrors(err)
 	}
-	if len(gitConfigContent) > 1 {
+	if len(gitConfigContent) > 1 && len(gitConfig) > 1 {
 		err = os.WriteFile(gitConfig, []byte(gitConfigContent), 0600)
 		handleErrors(err)
 	}
-	if len(sshConfigContent) > 1 {
+	if len(sshConfigContent) > 1 && len(sshConfig) > 1 {
 		err = os.WriteFile(sshConfig, []byte(sshConfigContent), 0600)
 		handleErrors(err)
 	}
-	if len(gpgKeyContent) > 1 {
+	if len(gpgKeyContent) > 1 && len(privateGPGKey) > 1 {
 		err = os.WriteFile(privateGPGKey, []byte(gpgKeyContent), 0600)
 		handleErrors(err)
 	}
-	if len(sshKeyContent) > 1 {
+	if len(sshKeyContent) > 1 && len(privateSSHKey) > 1 {
 		err = os.WriteFile(privateSSHKey, []byte(sshKeyContent), 0600)
 		handleErrors(err)
 	}
