@@ -15,7 +15,7 @@ var (
 	sshKeyContent    = ``
 )
 
-var (
+const (
 	gitConfig     = fmt.Sprint(userDirectory() + "/.gitconfig")
 	keysDir       = fmt.Sprint(userDirectory() + "/.ssh/")
 	sshConfig     = fmt.Sprint(keysDir + "config")
