@@ -87,7 +87,6 @@ func commandExists(cmd string) bool {
 	return true
 }
 
-
 func handleErrors(err error) {
 	if err != nil {
 		log.Println(err)
