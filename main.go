@@ -78,10 +78,15 @@ func userDirectory() string {
 	return user.HomeDir
 }
 
-func commandExists(application string) {
-	application, err := exec.LookPath(application)
-	handleErrors(err)
+func commandExists(cmd string) bool {
+	cmd, err := exec.LookPath(cmd)
+	if err != nil {
+		return false
+	}
+	_ = cmd
+	return true
 }
+
 
 func handleErrors(err error) {
 	if err != nil {
