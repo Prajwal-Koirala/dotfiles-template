@@ -10,16 +10,22 @@ import (
 )
 
 var (
+	/*
+	gitConfigPath
+	localGitConfigPath
+	gitConfigContent
+	*/
 	// Git
 	gitConfigPath        = fmt.Sprint(userDirectory() + "/.gitconfig")
-	localGitConfigPath = "configs/.ssh/config"
-	gitConfigPathContent []byte
+	localGitConfigPath = "configs/git/config"
+	gitConfigContent []byte
 	// SSH
 	sshKeysPath          = fmt.Sprint(userDirectory() + "/.ssh")
 	sshConfigPath        = fmt.Sprint(sshKeysPath + "/config")
-	localSshConfigPath = "configs/.ssh/config"
+	localSshConfigPath = "configs/ssh/config"
 	sshConfigPathContent []byte
 	privateSSHKey        = fmt.Sprint(sshKeysPath + "/id_ssh")
+	localSshConfigPath = "configs/ssh/config"
 	privateSSHKeyContent []byte
 	// GPG
 	privateGPGKey        = fmt.Sprint(sshKeysPath + "/id_gpg")
@@ -38,7 +44,7 @@ func init() {
 	commandExists("code")
 	// Read the content files
 	/* Git */
-	gitConfigPathContent, err = os.ReadFile(localGitConfigPath)
+	gitConfigContent, err = os.ReadFile(localGitConfigPath)
 	handleErrors(err)
 	/* SSH */
 	sshConfigPathContent, err = os.ReadFile(sshConfigPath)
@@ -77,11 +83,11 @@ func installSSHKeys() {
 		handleErrors(err)
 	}
 	// Git
-	if len(gitConfigPathContent) > 1 {
+	if len(gitConfigContent) > 1 {
 		if fileExists(gitConfigPath) {
 			os.Remove(gitConfigPath)
 		}
-		err = os.WriteFile(gitConfigPath, []byte(gitConfigPathContent), 0600)
+		err = os.WriteFile(gitConfigPath, []byte(gitConfigContent), 0600)
 		handleErrors(err)
 	}
 	// SSH Config
