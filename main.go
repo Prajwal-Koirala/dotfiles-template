@@ -65,7 +65,7 @@ func folderExists(foldername string) bool {
 	if os.IsNotExist(err) {
 		return false
 	}
-	return !info.IsDir()
+	return info.IsDir()
 }
 
 func fileExists(filename string) bool {
