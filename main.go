@@ -25,8 +25,12 @@ var (
 )
 
 func init() {
-	commandExists("git")
-	commandExists("gpg")
+	if !commandExists("git") {
+		log.Fatal("Error: Please install git")
+	}
+	if !commandExists("gpg") {
+		log.Fatal("Error: Please install gpg")
+	}
 }
 
 func main() {
