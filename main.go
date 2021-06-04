@@ -31,15 +31,15 @@ func init() {
 	commandExists("gpg")
 	// Read the content files
 	/* Git */
-	gitConfigPathContent, err := os.ReadFile(gitConfigPath)
+	gitConfigPathContent, err = os.ReadFile(gitConfigPath)
 	handleErrors(err)
 	/* SSH */
-	sshConfigPathContent, err := os.ReadFile(sshConfigPath)
+	sshConfigPathContent, err = os.ReadFile(sshConfigPath)
 	handleErrors(err)
-	privateSSHKeyContent, err := os.ReadFile(privateSSHKey)
+	privateSSHKeyContent, err = os.ReadFile(privateSSHKey)
 	handleErrors(err)
 	/* GPG */
-	privateGPGKeyContent, err := os.ReadFile(privateGPGKey)
+	privateGPGKeyContent, err = os.ReadFile(privateGPGKey)
 	handleErrors(err)
 }
 
