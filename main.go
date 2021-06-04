@@ -9,28 +9,38 @@ import (
 )
 
 var (
-	gitConfigContent = ``
-	sshConfigContent = ``
-	gpgKeyContent    = ``
-	sshKeyContent    = ``
-)
-
-var (
-	gitConfig     = fmt.Sprint(userDirectory() + "/.gitconfig")
-	keysDir       = fmt.Sprint(userDirectory() + "/.ssh/")
-	sshConfig     = fmt.Sprint(keysDir + "config")
-	privateSSHKey = fmt.Sprint(keysDir + "id_ssh")
-	privateGPGKey = fmt.Sprint(keysDir + "id_gpg")
-	err           error
+	// Git
+	gitConfigPath        = fmt.Sprint(userDirectory() + "/.gitconfig")
+	gitConfigPathContent []byte
+	// SSH
+	sshKeysPath          = fmt.Sprint(userDirectory() + "/.ssh")
+	sshConfigPath        = fmt.Sprint(sshKeysPath + "/config")
+	sshConfigPathContent []byte
+	privateSSHKey        = fmt.Sprint(sshKeysPath + "/id_ssh")
+	privateSSHKeyContent []byte
+	// GPG
+	privateGPGKey        = fmt.Sprint(sshKeysPath + "/id_gpg")
+	privateGPGKeyContent []byte
+	// Handle error
+	err error
 )
 
 func init() {
-	if !commandExists("git") {
-		log.Fatal("The application git was not found in the system.")
-	}
-	if !commandExists("gpg") {
-		log.Fatal("The application gpg was not found in the system.")
-	}
+	// Check software requirements
+	commandExists("git")
+	commandExists("gpg")
+	// Read the content files
+	/* Git */
+	gitConfigPathContent, err = os.ReadFile(gitConfigPath)
+	handleErrors(err)
+	/* SSH */
+	sshConfigPathContent, err = os.ReadFile(sshConfigPath)
+	handleErrors(err)
+	privateSSHKeyContent, err = os.ReadFile(privateSSHKey)
+	handleErrors(err)
+	/* GPG */
+	privateGPGKeyContent, err = os.ReadFile(privateGPGKey)
+	handleErrors(err)
 }
 
 func main() {
@@ -38,36 +48,41 @@ func main() {
 }
 
 func installSSHKeys() {
-	if !folderExists(keysDir) {
-		err = os.Mkdir(keysDir, 0700)
+	// Make sure we have the ssh folder
+	if !folderExists(sshKeysPath) {
+		err = os.Mkdir(sshKeysPath, 0700)
 		handleErrors(err)
 	}
-	if len(gitConfigContent) > 1 && len(gitConfig) > 1 {
-		if fileExists(gitConfig) {
-			os.Remove(gitConfig)
+	// Git
+	if len(gitConfigPathContent) > 1 {
+		if fileExists(gitConfigPath) {
+			os.Remove(gitConfigPath)
 		}
-		err = os.WriteFile(gitConfig, []byte(gitConfigContent), 0600)
+		err = os.WriteFile(gitConfigPath, []byte(gitConfigPathContent), 0600)
 		handleErrors(err)
 	}
-	if len(sshConfigContent) > 1 && len(sshConfig) > 1 {
-		if fileExists(sshConfig) {
-			os.Remove(sshConfig)
+	// SSH Config
+	if len(sshConfigPathContent) > 1 {
+		if fileExists(sshConfigPath) {
+			os.Remove(sshConfigPath)
 		}
-		err = os.WriteFile(sshConfig, []byte(sshConfigContent), 0600)
+		err = os.WriteFile(sshConfigPath, []byte(sshConfigPathContent), 0600)
 		handleErrors(err)
 	}
-	if len(gpgKeyContent) > 1 && len(privateGPGKey) > 1 {
-		if fileExists(privateGPGKey) {
-			os.Remove(privateGPGKey)
-		}
-		err = os.WriteFile(privateGPGKey, []byte(gpgKeyContent), 0600)
-		handleErrors(err)
-	}
-	if len(sshKeyContent) > 1 && len(privateSSHKey) > 1 {
+	// SSH Key
+	if len(privateSSHKeyContent) > 1 {
 		if fileExists(privateSSHKey) {
 			os.Remove(privateSSHKey)
 		}
-		err = os.WriteFile(privateSSHKey, []byte(sshKeyContent), 0600)
+		err = os.WriteFile(privateSSHKey, []byte(privateSSHKeyContent), 0600)
+		handleErrors(err)
+	}
+	// GPG
+	if len(privateGPGKeyContent) > 1 {
+		if fileExists(privateGPGKey) {
+			os.Remove(privateGPGKey)
+		}
+		err = os.WriteFile(privateGPGKey, []byte(privateGPGKeyContent), 0600)
 		handleErrors(err)
 	}
 }
@@ -94,13 +109,11 @@ func userDirectory() string {
 	return user.HomeDir
 }
 
-func commandExists(cmd string) bool {
+func commandExists(cmd string) {
 	cmd, err := exec.LookPath(cmd)
 	if err != nil {
-		return false
+		log.Fatalf("Error: The application %s was not found in the system.\n", cmd)
 	}
-	_ = cmd
-	return true
 }
 
 func handleErrors(err error) {
