@@ -26,10 +26,10 @@ var (
 
 func init() {
 	if !commandExists("git") {
-		log.Fatal("Error: Please install git")
+		log.Fatal("The application git was not found in the system.")
 	}
 	if !commandExists("gpg") {
-		log.Fatal("Error: Please install gpg")
+		log.Fatal("The application gpg was not found in the system.")
 	}
 }
 
