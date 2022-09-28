@@ -6,21 +6,33 @@ import (
 	"os"
 	"os/exec"
 	"os/user"
+	"runtime"
 )
 
 var (
+	/*
+	gitConfigPath
+	localGitConfigPath
+	gitConfigContent
+	*/
 	// Git
 	gitConfigPath        = fmt.Sprint(userDirectory() + "/.gitconfig")
-	gitConfigPathContent []byte
+	localGitConfigPath = "configs/git/config"
+	gitConfigContent []byte
 	// SSH
 	sshKeysPath          = fmt.Sprint(userDirectory() + "/.ssh")
 	sshConfigPath        = fmt.Sprint(sshKeysPath + "/config")
+	localSshConfigPath = "configs/ssh/config"
 	sshConfigPathContent []byte
 	privateSSHKey        = fmt.Sprint(sshKeysPath + "/id_ssh")
+	localSshConfigPath = "configs/ssh/config"
 	privateSSHKeyContent []byte
 	// GPG
 	privateGPGKey        = fmt.Sprint(sshKeysPath + "/id_gpg")
 	privateGPGKeyContent []byte
+	// VsCode
+	vsCodePath    string
+	vsCodeContent []byte
 	// Handle error
 	err error
 )
@@ -29,9 +41,10 @@ func init() {
 	// Check software requirements
 	commandExists("git")
 	commandExists("gpg")
+	commandExists("code")
 	// Read the content files
 	/* Git */
-	gitConfigPathContent, err = os.ReadFile(gitConfigPath)
+	gitConfigContent, err = os.ReadFile(localGitConfigPath)
 	handleErrors(err)
 	/* SSH */
 	sshConfigPathContent, err = os.ReadFile(sshConfigPath)
@@ -44,7 +57,23 @@ func init() {
 }
 
 func main() {
+	operatingSystemSelector()
 	installSSHKeys()
+}
+
+func operatingSystemSelector() {
+	// System config path
+	switch runtime.GOOS {
+	case "darwin":
+		vsCodePath = `$HOME/Library/Application Support/Code/User/settings.json`
+	case "linux":
+		vsCodePath = `$HOME/.config/Code/User/settings.json`
+	case "windows":
+		vsCodePath = `%APPDATA%\Code\User\settings.json`
+	}
+	/* vsCode */
+	privateGPGKeyContent, err = os.ReadFile(privateGPGKey)
+	handleErrors(err)
 }
 
 func installSSHKeys() {
@@ -54,11 +83,11 @@ func installSSHKeys() {
 		handleErrors(err)
 	}
 	// Git
-	if len(gitConfigPathContent) > 1 {
+	if len(gitConfigContent) > 1 {
 		if fileExists(gitConfigPath) {
 			os.Remove(gitConfigPath)
 		}
-		err = os.WriteFile(gitConfigPath, []byte(gitConfigPathContent), 0600)
+		err = os.WriteFile(gitConfigPath, []byte(gitConfigContent), 0600)
 		handleErrors(err)
 	}
 	// SSH Config
